@@ -1,6 +1,4 @@
 <?php
-// 2172005 - Yovie Adhisti
-// 2172042 - Veronica Marcella
 session_start();
 if(!isset($_SESSION['registered_user'])){
     $_SESSION['registered_user']=false;
@@ -113,7 +111,7 @@ include_once 'db_util/user_function.php';
             include_once 'pages/login_page.php';
     }
     ?>
-    <footer class="bg-light text-center text-lg-start " >
+    <footer class="bg-light text-center text-lg-start " viewport-height= "(property: height, class: vh, values: (100: 100vh)" >
       <!-- Copyright -->
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
         © 2023 Copyright:
