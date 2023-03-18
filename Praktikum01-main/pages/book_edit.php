@@ -1,9 +1,7 @@
-<?php 
-    
+<?php
     $editedISBN = filter_input(INPUT_GET,'isbn');
     if(isset($editedISBN)){
         $book = fetchOneBook($editedISBN);
-        
     }
     $bookAwal = fetchOneBook2();
     $updatePressed = filter_input(INPUT_POST,'btnUpdate');
@@ -23,6 +21,30 @@
             ';}else{
             $results = updateBookToDb($book['ISBN'],$title,$author,$publisher,$publishYear,$shortDesc,$idGenre);
             if($results){
+                header('location:index.php?menu=book');
+            }else{
+                echo '
+                <div>
+                    Failed to add data
+                </div>
+            ';
+            }
+        }
+    }
+
+    $uploadPressed=filter_input(INPUT_POST, 'btnUpload');
+    if (isset($uploadPressed)){
+        $book=fetchOneBook($editedISBN);
+        $targetDirectory ='upload/';
+        $fileExstension=pathinfo($_FILES['txtFile']['name'], PATHINFO_EXTENSION);
+        $nama = $editedISBN.'.'.$fileExstension;
+        $fileUploadPath=$targetDirectory.$editedISBN.'.'.$fileExstension;
+        if($_FILES['txtFile']['size']>1024*2048){
+            echo '<div>Uploaded file exceed 2MB</div>';
+        } else{
+            move_uploaded_file($_FILES['txtFile']['tmp_name'],$fileUploadPath);
+            $result = uploadCover($editedISBN, $nama);
+            if($result){
                 header('location:index.php?menu=book');
             }else{
                 echo '
@@ -80,10 +102,26 @@
                 </select>
             </div>
             <button type="submit" class="btn btn-primary" name="btnUpdate">Update Data</button>
-            
             </form>
+            <div>
+                <h3>Current Cover</h3>
+                <?php
+                if ($book['cover'] != ''){
+                    echo '<img class="rounded-3" src="upload/'.$book['cover'].'" style="width:100%;height:auto;max-width:100px;max-height:150px;">';
+                } else {
+                    echo '<img class="rounded-3" src="upload/defaultCover.png" style="width:100%;height:auto;max-width:100px;max-height:150px;">';
+                }
+                ?>
+            </div>
+            <div class="container">
+                <form method="post" enctype="multipart/form-data">
+                    <fieldset>
+                        <legend>Upload Image</legend>
+                        <input type="file" name="txtFile" accept="image/jpeg|image/png">
+                        <input type="submit" name="btnUpload" value="Upload to file Server">
+                    </fieldset>
+                </form>
+            </div>
         </div>
-        
-       
     </div>
 </div>
