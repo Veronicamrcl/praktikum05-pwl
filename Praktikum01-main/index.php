@@ -1,4 +1,6 @@
 <?php
+// 2172005 - Yovie Adhisti
+// 2172042 - Veronica Marcella
 session_start();
 if(!isset($_SESSION['registered_user'])){
     $_SESSION['registered_user']=false;
