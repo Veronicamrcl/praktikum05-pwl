@@ -57,7 +57,7 @@
     }
 ?>
 
-<div class="container" style="height:100vh">
+<div class="container" style="height:auto">
    <div class="row d-flex text-start justify-content-center my-3">
         <div class="col-md-6">
             <form method="post">
