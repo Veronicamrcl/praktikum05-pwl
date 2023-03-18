@@ -28,7 +28,7 @@
     }
     function fetchOneBook($isbn){
         $link = createMySQLConnection();
-        $query = "SELECT ISBN,title,author,publisher,publish_year,short_description,genre_id  FROM book WHERE ISBN = ?;";
+        $query = "SELECT cover, ISBN,title,author,publisher,publish_year,short_description,genre_id  FROM book WHERE ISBN = ?;";
         $stmt = $link->prepare($query);
         $stmt->bindParam(1,$isbn);
         $stmt->execute();
@@ -97,6 +97,24 @@
         $query = 'DELETE FROM book WHERE ISBN = ?';
         $stmt = $link->prepare($query);
         $stmt->bindParam(1,$isbn);
+        if($stmt->execute()){
+            $link -> commit();
+            $result = 1;
+        }else{
+            $link -> rollBack();
+        }
+        $link =null;
+        return $result;
+    }
+
+    function uploadCover($isbn, $cover){
+        $result = 0;
+        $link = createMySQLConnection();
+        $link -> beginTransaction();
+        $query = 'UPDATE book SET cover = ? WHERE ISBN = ?';
+        $stmt = $link->prepare($query);
+        $stmt->bindParam(1,$cover,PDO::PARAM_STR);
+        $stmt->bindParam(2,$isbn,PDO::PARAM_STR);
         if($stmt->execute()){
             $link -> commit();
             $result = 1;
