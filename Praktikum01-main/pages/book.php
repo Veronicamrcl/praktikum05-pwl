@@ -2,17 +2,19 @@
 $deletecmd = filter_input(INPUT_GET,'comd');
 if(isset($deletecmd) && $deletecmd = 'dele'){
     $ISBNdel = filter_input(INPUT_GET,'idb');
+    $book = fetchOneBook($ISBNdel);
+    unlink('upload/'.$book['cover']);
     $results =deleteBookFromDb($ISBNdel);
     if($results){
         echo '
         <div>
-            Data Successfully added
+            Data Successfully deleted
         </div>
     ';
     }else{
         echo '
         <div>
-            Failed to add data
+            Failed to add deleted
         </div>
     ';
     }
@@ -39,7 +41,6 @@ if(isset($submitPressed)){
     }
 }
 
-
 ?>
 <div class="container text-center mt-3 h-100 mb-5">
     <div class="row d-flex justify-content-center align-items-center">
@@ -63,7 +64,11 @@ if(isset($submitPressed)){
                     $result = fetchJoinFromDb();
                     foreach($result as $book ){
                         echo '<tr>';
-                        echo '<td>'. $book['cover'] . '</td>';
+                        if ($book['cover'] != ''){
+                            echo '<td class="py-2 px-2"> <img class="rounded-3" src="upload/'.$book['cover'].'" style="width:100%;height:auto;max-width:100px;max-height:150px;"></td>';
+                        } else {
+                            echo '<td class="py-2 px-2"> <img class="rounded-3" src="upload/defaultCover.png" style="width:100%;height:auto;max-width:100px;max-height:150px;"></td>';
+                        }
                         echo '<td>'. $book['ISBN'] . '</td>';
                         echo '<td class="w-25">'. $book['title'] . '</td>';
                         echo '<td>'. $book['author'] . '</td>';
@@ -83,8 +88,7 @@ if(isset($submitPressed)){
             </div>
         </div>
        </div>
-                
-    
+
     <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary w-100 my-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
   Tambah Data
@@ -144,7 +148,6 @@ if(isset($submitPressed)){
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary w-100" name="btnSave">Save Data</button>
-              
             </div>
         </form>
     
