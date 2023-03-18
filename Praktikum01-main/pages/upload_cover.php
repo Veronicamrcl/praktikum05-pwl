@@ -38,6 +38,9 @@ if (isset($uploadPressed)){
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+<div style="height:50vh;">
+
+
 <div class="ms-5 ps-4">
     <h3>Current Cover</h3>
 <?php
@@ -57,6 +60,7 @@ if (isset($uploadPressed)){
             <input type="submit" name="btnUpload" value="Upload to file Server">
         </fieldset>
     </form>
+</div>
 </div>
 <main>
 
