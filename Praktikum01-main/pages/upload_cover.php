@@ -1,14 +1,16 @@
 <?php
+$isbn=filter_input(INPUT_GET, 'isbn');
 $uploadPressed=filter_input(INPUT_POST, 'btnUpload');
 if (isset($uploadPressed)){
-    $fileName=filter_input(INPUT_POST,'txtFileName');
     $targetDirectory ='upload/';
     $fileExstension=pathinfo($_FILES['txtFile']['name'], PATHINFO_EXTENSION);
-    $fileUploadPath=$targetDirectory.$fileName.'.'.$fileExstension;
+    $nama = $isbn.'.'.$fileExstension;
+    $fileUploadPath=$targetDirectory.$isbn.'.'.$fileExstension;
     if($_FILES['txtFile']['size']>1024*2048){
         echo '<div>Uploaded file exceed 2MB</div>';
     } else{
         move_uploaded_file($_FILES['txtFile']['tmp_name'],$fileUploadPath);
+        $result = uploadCover($isbn, $nama);
     }
 }
 ?>
@@ -36,11 +38,21 @@ if (isset($uploadPressed)){
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+<div class="ms-5 ps-4">
+    <h3>Current Cover</h3>
+<?php
+    $book=fetchOneBook($isbn);
+    if ($book['cover'] != ''){
+    echo '<img class="rounded-3" src="upload/'.$book['cover'].'" style="width:100%;height:auto;max-width:100px;max-height:150px;">';
+    } else {
+    echo '<img class="rounded-3" src="upload/defaultCover.png" style="width:100%;height:auto;max-width:100px;max-height:150px;">';
+    }
+    ?>
+</div>
 <div class="container">
     <form method="post" enctype="multipart/form-data">
         <fieldset>
             <legend>Upload Image</legend>
-            <input type="text" name="txtFileName" placeholder="Upload file name">
             <input type="file" name="txtFile" accept="image/jpeg|image/png">
             <input type="submit" name="btnUpload" value="Upload to file Server">
         </fieldset>
